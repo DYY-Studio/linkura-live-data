@@ -12,7 +12,7 @@ ARCHIVE_JSON="$DATA_DIR/archive.json"
 TEMP_ARCHIVE="/tmp/archive.json"
 
 # Tool URL and configuration
-TOOL_URL="https://github.com/ChocoLZS/linkura-cli/releases/download/linkura-cli-v0.0.2/linkura-cli-x86_64-unknown-linux-gnu.tar.gz"
+TOOL_URL="https://github.com/ChocoLZS/linkura-cli/releases/download/linkura-cli-v0.0.2/linkura-cli-x86_64-pc-windows-gnu.tar.gz"
 TOOL_NAME="linkura-cli"
 
 echo "Starting archive task..."
@@ -133,6 +133,19 @@ print(f"Loading existing archive from: {archive_json}")
 temp_data = load_json(temp_archive)
 existing_data = load_json(archive_json)
 
+# Remove URL prefix from temp_data
+prefix_to_remove = 'https://assets.link-like-lovelive.app/'
+for entry in temp_data:
+    # Process video_url field
+    if 'video_url' in entry and entry['video_url']:
+        if entry['video_url'].startswith(prefix_to_remove):
+            entry['video_url'] = entry['video_url'][len(prefix_to_remove):]
+    
+    # Process external_link field
+    if 'external_link' in entry and entry['external_link']:
+        if entry['external_link'].startswith(prefix_to_remove):
+            entry['external_link'] = entry['external_link'][len(prefix_to_remove):]
+
 print(f"Temp data entries: {len(temp_data)}")
 print(f"Existing data entries: {len(existing_data)}")
 
@@ -175,11 +188,7 @@ if [ "$HAS_UPDATES" = "true" ]; then
     
     # Create commit message with current date
     COMMIT_DATE=$(date '+%y-%m-%d')
-    git commit -m "auto($COMMIT_DATE): update archive.json
-
-🤖 Generated with [Claude Code](https://claude.ai/code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>"
+    git commit -m "auto($COMMIT_DATE): update archive.json"
     
     # Push changes
     git push
