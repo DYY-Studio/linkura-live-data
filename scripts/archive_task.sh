@@ -134,7 +134,7 @@ temp_data = load_json(temp_archive)
 existing_data = load_json(archive_json)
 
 # Remove URL prefix from temp_data
-prefix_to_remove = 'https://assets.link-like-lovelive.app/'
+prefix_to_remove = 'https://assets.link-like-lovelive.app'
 for entry in temp_data:
     # Process video_url field
     if 'video_url' in entry and entry['video_url']:
