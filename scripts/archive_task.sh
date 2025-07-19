@@ -50,7 +50,7 @@ if [ ! -f "$ARCHIVE_JSON" ]; then
 fi
 
 # Use Python to process the JSON files
-python3 << 'EOF'
+TEMP_ARCHIVE=$TEMP_ARCHIVE ARCHIVE_JSON=$ARCHIVE_JSON python3 << 'EOF'
 import json
 import sys
 import os
@@ -124,7 +124,7 @@ def find_new_data(temp_data, existing_data):
     return new_entries, updated_entries
 
 # Main processing
-temp_archive = '/tmp/archive.json'
+temp_archive = os.environ.get('TEMP_ARCHIVE', '/tmp/archive.json')
 archive_json = os.environ.get('ARCHIVE_JSON', 'data/archive.json')
 
 print(f"Loading temp archive from: {temp_archive}")
@@ -157,6 +157,9 @@ if new_entries or updated_entries:
     # Add new entries to existing data
     existing_data.extend(new_entries)
     
+    # Sort all data by live_start_time in descending order (newest first)
+    existing_data.sort(key=lambda x: x.get('live_start_time', ''), reverse=True)
+    
     # Save updated data
     save_json(existing_data, archive_json)
     
@@ -164,7 +167,7 @@ if new_entries or updated_entries:
     with open('/tmp/has_updates', 'w') as f:
         f.write('true')
     
-    print("Archive data updated successfully")
+    print("Archive data updated and sorted successfully")
 else:
     print("No new data found")
     with open('/tmp/has_updates', 'w') as f:

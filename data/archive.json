@@ -1,5 +1,17 @@
 [
   {
+    "archives_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
+    "description": "ごきげんよう、桂城 泉だ。\n今日は花帆先輩と二人で、「セラス」をテーマに話していこうと思う。\n私も、瑞河以前のセラスについてはそこまで詳しくないからね。\nどんな話が聞けるのか楽しみだ。",
+    "external_link": "/archive/alst/20250719135000-b3a603da-98e3-4eb8-90e7-3774c0ddc0ff/811c9dc5c671a.md",
+    "live_end_time": "2025-07-19T05:30:00.885Z",
+    "live_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
+    "live_start_time": "2025-07-19T04:50:00.746Z",
+    "live_type": 2,
+    "name": "セラス 柳田 リリエンフェルトのヒミツ",
+    "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/f8e40974-8f01-45c9-a42a-783b87285b1a.jpg",
+    "video_url": ""
+  },
+  {
     "archives_id": "4ccfce94-d745-4859-ae13-33bd8a27e128",
     "description": "瑠璃乃だよ☆\nる、ルリルリなんでも調査隊に新入隊員が！？\nセラス隊員、早速出動だー！！",
     "external_link": "/archive/alst/20250717202000-ad0fc0f2-559b-493b-a2d1-1f76aab05108/811c9dc5dfc47.md",
@@ -3598,17 +3610,5 @@
     "name": "新入生紹介配信",
     "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/b4700cde-34a8-4586-bc9d-392a457f491b.jpg",
     "video_url": "/archive/hls/20230417/index.m3u8"
-  },
-  {
-    "archives_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
-    "description": "ごきげんよう、桂城 泉だ。\n今日は花帆先輩と二人で、「セラス」をテーマに話していこうと思う。\n私も、瑞河以前のセラスについてはそこまで詳しくないからね。\nどんな話が聞けるのか楽しみだ。",
-    "external_link": "/archive/alst/20250719135000-b3a603da-98e3-4eb8-90e7-3774c0ddc0ff/811c9dc5c671a.md",
-    "live_end_time": "2025-07-19T05:30:00.885Z",
-    "live_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
-    "live_start_time": "2025-07-19T04:50:00.746Z",
-    "live_type": 2,
-    "name": "セラス 柳田 リリエンフェルトのヒミツ",
-    "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/f8e40974-8f01-45c9-a42a-783b87285b1a.jpg",
-    "video_url": ""
   }
 ]
