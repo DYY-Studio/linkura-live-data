@@ -9,7 +9,7 @@
     "live_type": 2,
     "name": "出動！ルリルリなんでも調査隊！",
     "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/0fe966d1-aa9f-491f-9ef3-11bd1c1e1218.jpg",
-    "video_url": ""
+    "video_url": "/archive/hls/20250717/index.m3u8"
   },
   {
     "archives_id": "bdb11592-9b22-4fe1-80ec-f3b59197cc05",
@@ -3598,5 +3598,17 @@
     "name": "新入生紹介配信",
     "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/b4700cde-34a8-4586-bc9d-392a457f491b.jpg",
     "video_url": "/archive/hls/20230417/index.m3u8"
+  },
+  {
+    "archives_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
+    "description": "ごきげんよう、桂城 泉だ。\n今日は花帆先輩と二人で、「セラス」をテーマに話していこうと思う。\n私も、瑞河以前のセラスについてはそこまで詳しくないからね。\nどんな話が聞けるのか楽しみだ。",
+    "external_link": "/archive/alst/20250719135000-b3a603da-98e3-4eb8-90e7-3774c0ddc0ff/811c9dc5c671a.md",
+    "live_end_time": "2025-07-19T05:30:00.885Z",
+    "live_id": "af2cc5a9-24af-4f81-921c-ef13a0110217",
+    "live_start_time": "2025-07-19T04:50:00.746Z",
+    "live_type": 2,
+    "name": "セラス 柳田 リリエンフェルトのヒミツ",
+    "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/f8e40974-8f01-45c9-a42a-783b87285b1a.jpg",
+    "video_url": ""
   }
 ]
