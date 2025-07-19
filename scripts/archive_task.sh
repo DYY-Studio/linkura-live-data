@@ -171,35 +171,4 @@ else:
         f.write('false')
 EOF
 
-# Check if there were updates
-HAS_UPDATES=$(cat /tmp/has_updates)
-
-if [ "$HAS_UPDATES" = "true" ]; then
-    echo "Changes detected, committing to git..."
-    
-    cd "$PROJECT_ROOT"
-    
-    # Configure git (in case it's not configured in CI)
-    git config --local user.email "action@github.com"
-    git config --local user.name "GitHub Action"
-    
-    # Add and commit changes
-    git add data/archive.json
-    
-    # Create commit message with current date
-    COMMIT_DATE=$(date '+%y-%m-%d')
-    git commit -m "auto($COMMIT_DATE): update archive.json"
-    
-    # Push changes
-    git push
-    
-    echo "Changes committed and pushed successfully"
-else
-    echo "No changes to commit"
-fi
-
-# Cleanup
-rm -rf "$TEMP_DIR"
-rm -f /tmp/has_updates
-
 echo "Archive task completed successfully"
