@@ -30,6 +30,7 @@ jobs:
       env:
         PLAYER_ID: ${{ secrets.PLAYER_ID }}
         PASSWORD: ${{ secrets.PASSWORD }}
+        ARCHIVE_JSON: ${{ github.workspace }}/data/archive.json
       run: ./scripts/archive_task.sh
 
     - name: Commit changes
@@ -37,4 +38,4 @@ jobs:
       with:
         default_author: github_actions
         add: |
-          - data/archive.json
+          - ${{ github.workspace }}/data/archive.json
