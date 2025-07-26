@@ -1,5 +1,17 @@
 [
   {
+    "archives_id": "d11fcef3-973c-4754-9393-1501ace2744d",
+    "description": "セラス カラオケ 嬉しいフェルトです。\nカラオケ蓮ノ空に、Edel Noteが参戦です。\nみなさん、盛り上がってますか。配信内でお知らせもありますよ。\n配信が始まる前に、コメント欄を温めておいてください。600Wで3分半。\n\n本当にカラオケ嬉しいです。たのしみ。",
+    "external_link": "/archive/alst/20250726135000-20bc0bfd-12a4-4384-8c6c-09784756a4f4/811c9dc5c0e18.md",
+    "live_end_time": "2025-07-26T05:34:00.891Z",
+    "live_id": "d11fcef3-973c-4754-9393-1501ace2744d",
+    "live_start_time": "2025-07-26T04:50:00.736Z",
+    "live_type": 2,
+    "name": "カラオケEdel Noteへようこそ。",
+    "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/c0abbc7e-6e2a-46fa-bfca-a79fd3b5390a.jpg",
+    "video_url": ""
+  },
+  {
     "archives_id": "9a68627f-9f17-4519-aea3-382c5084e9c1",
     "description": "花帆だよ！\nスリーズブーケ恒例？、読書のお話〜イェ〜イ♪\nおすすめの本とか紹介させてもらう予定だから、お楽しみに！",
     "external_link": "/archive/alst/20250724205000-0e4e9e9e-21b1-4b08-a902-7119d910f059/811c9dc59c503.md",
@@ -9,7 +21,7 @@
     "live_type": 2,
     "name": "スリーズブーケで読書のお話！",
     "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/ba4bfc15-7ad8-4132-ad55-ab3c33bf5d94.jpg",
-    "video_url": ""
+    "video_url": "/archive/hls/20250724/index.m3u8"
   },
   {
     "archives_id": "35429742-42dc-472d-a397-ea255f6738ef",
