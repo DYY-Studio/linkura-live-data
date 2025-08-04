@@ -85,6 +85,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: 'main'
         fetch-depth: 2  # 需要获取前两个提交来比较差异
     
     - name: Setup Python and dependencies
@@ -115,6 +116,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: 'main'
         fetch-depth: 2  # 需要获取前两个提交来比较差异
     
     - name: Setup Python and dependencies
