@@ -14,6 +14,9 @@ on:
 jobs:
   archive:
     runs-on: ubuntu-latest
+    outputs:
+      datetime: ${{ steps.datetime.outputs.time_now }}
+      commit_timestamp: ${{ steps.commit_info.outputs.commit_timestamp }}
     
     steps:
     - name: Checkout repository
@@ -49,23 +52,27 @@ jobs:
         add: |
           - data/archive.json
 
-  auto-upload:
+    - name: Get commit timestamp for follow-up jobs
+      id: commit_info
+      run: |
+        # Get the timestamp of the latest commit after potential new commit
+        latest_commit_time=$(git log -1 --format=%ct)
+        echo "commit_timestamp=$latest_commit_time" >> $GITHUB_OUTPUT
+        echo "Latest commit timestamp: $latest_commit_time"
+
+  # 共享的时间检查和环境设置
+  post-archive-setup:
     runs-on: ubuntu-latest
     needs: archive
     if: ${{ success() }}
+    outputs:
+      should_run_followup: ${{ steps.time_check.outputs.should_run }}
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
-    
-    - name: Check if latest commit is within 1 minute
-      id: check_commit_time
+    - name: Check if commit is recent enough for follow-up tasks
+      id: time_check
       run: |
-        # Get the timestamp of the latest commit
-        latest_commit_time=$(git log -1 --format=%ct)
+        latest_commit_time=${{ needs.archive.outputs.commit_timestamp }}
         current_time=$(date +%s)
         time_diff=$((current_time - latest_commit_time))
         
@@ -75,87 +82,68 @@ jobs:
         
         # Check if commit is within 1 minute (60 seconds)
         if [ $time_diff -le 60 ]; then
-          echo "Commit is within 1 minute, proceeding with upload task"
+          echo "Commit is within 1 minute, follow-up tasks will proceed"
           echo "should_run=true" >> $GITHUB_OUTPUT
         else
-          echo "Commit is older than 1 minute, skipping upload task"
+          echo "Commit is older than 1 minute, follow-up tasks will be skipped"
           echo "should_run=false" >> $GITHUB_OUTPUT
         fi
+
+  auto-upload:
+    runs-on: ubuntu-latest
+    needs: [archive, post-archive-setup]
+    if: ${{ success() && needs.post-archive-setup.outputs.should_run_followup == 'true' }}
     
-    - name: Setup Python
-      if: steps.check_commit_time.outputs.should_run == 'true'
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 1  # 只需要最新的提交
+    
+    - name: Setup Python and dependencies
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
     
     - name: Install Python dependencies
-      if: steps.check_commit_time.outputs.should_run == 'true'
       run: pip install requests
     
-    - name: Make script executable
-      if: steps.check_commit_time.outputs.should_run == 'true'
-      run: chmod +x scripts/auto_upload_task.sh
-    
-    - name: Run auto upload task
-      if: steps.check_commit_time.outputs.should_run == 'true'
+    - name: Make script executable and run upload task
       env:
         R2_BUCKET: ${{ secrets.R2_BUCKET }}
         R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
         R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
         R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      run: ./scripts/auto_upload_task.sh
+      run: |
+        chmod +x scripts/auto_upload_task.sh
+        ./scripts/auto_upload_task.sh
 
   notification:
     runs-on: ubuntu-latest
-    needs: archive
-    if: ${{ success() }}
+    needs: [archive, post-archive-setup]
+    if: ${{ success() && needs.post-archive-setup.outputs.should_run_followup == 'true' }}
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
+        fetch-depth: 1  # 只需要最新的提交
     
-    - name: Check if latest commit is within 1 minute
-      id: check_commit_time
-      run: |
-        # Get the timestamp of the latest commit
-        latest_commit_time=$(git log -1 --format=%ct)
-        current_time=$(date +%s)
-        time_diff=$((current_time - latest_commit_time))
-        
-        echo "Latest commit time: $latest_commit_time"
-        echo "Current time: $current_time"
-        echo "Time difference: $time_diff seconds"
-        
-        # Check if commit is within 1 minute (60 seconds)
-        if [ $time_diff -le 60 ]; then
-          echo "Commit is within 1 minute, proceeding with notification task"
-          echo "should_run=true" >> $GITHUB_OUTPUT
-        else
-          echo "Commit is older than 1 minute, skipping notification task"
-          echo "should_run=false" >> $GITHUB_OUTPUT
-        fi
-    
-    - name: Setup Python
-      if: steps.check_commit_time.outputs.should_run == 'true'
+    - name: Setup Python and dependencies
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
     
     - name: Install Python dependencies
-      if: steps.check_commit_time.outputs.should_run == 'true'
       run: pip install requests
     
-    - name: Make script executable
-      if: steps.check_commit_time.outputs.should_run == 'true'
-      run: chmod +x scripts/notification_task.sh
-    
-    - name: Run notification task
-      if: steps.check_commit_time.outputs.should_run == 'true'
+    - name: Make script executable and run notification task
       env:
         QQ_BOT_URL: ${{ secrets.QQ_BOT_URL }}
         GROUP_ID: ${{ secrets.GROUP_ID }}
         AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
-      run: ./scripts/notification_task.sh
+      run: |
+        chmod +x scripts/notification_task.sh
+        ./scripts/notification_task.sh
