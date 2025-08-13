@@ -1,5 +1,17 @@
 [
   {
+    "archives_id": "ed89593b-3b0c-4de3-9758-2ed1519634fe",
+    "description": "花帆だよ！\n今、緊急で動画回してるの！\n・・・っていうのは嘘なんだけど、今回は録画回♪\n三連華の日常を録画してみたから、お楽しみに！",
+    "external_link": "",
+    "live_end_time": "2025-08-13T11:57:01.066Z",
+    "live_id": "ed89593b-3b0c-4de3-9758-2ed1519634fe",
+    "live_start_time": "2025-08-13T11:20:00.568Z",
+    "live_type": 2,
+    "name": "三連華の日常。",
+    "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/63b68a50-7667-4262-a170-5de9a5ebfcfa.jpg",
+    "video_url": "/archive/hls/ed89593b-3b0c-4de3-9758-2ed1519634fe/2025-08-13T2018/hls/index.m3u8"
+  },
+  {
     "archives_id": "4bdab8b2-0894-464b-ba11-9beec6224da4",
     "description": "夏合宿中の瑠璃乃だよ☆\n今年も開催！合宿ラジオ〜！\nさて、今回はどんな展開になるのやら・・・？",
     "external_link": "/archive/alst/20250811205000-70028180-db5d-46aa-832b-d6e8930870c3/811c9dc5b9928.md",
@@ -9,7 +21,7 @@
     "live_type": 2,
     "name": "もちろん今年も！合宿ラジオ！",
     "thumbnail_image_url": "https://assets.link-like-lovelive.app/with_meets/thumbnail_image/15c51e8b-82e1-4703-8104-d64a0e0a38b9.jpg",
-    "video_url": ""
+    "video_url": "/archive/hls/20250811/index.m3u8"
   },
   {
     "archives_id": "fb796878-537c-4274-b080-95dcea7041e0",
