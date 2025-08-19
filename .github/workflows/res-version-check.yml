@@ -57,7 +57,7 @@ jobs:
       uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
-        message: 'res版本(${{ steps.datetime.outputs.time_now }}): ${{ steps.version-check.outputs.version }}'
+        message: 'res version(${{ steps.datetime.outputs.time_now }}): ${{ steps.version-check.outputs.version }}'
         add: |
           - data/res_version.txt
     
