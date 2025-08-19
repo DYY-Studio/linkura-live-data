@@ -100,4 +100,4 @@ jobs:
         echo "编码后的消息: $ENCODED_MSG"
         
         # 发送请求
-        curl -f "$UPTIME_URL" || echo "Uptime通知发送失败"
+        curl "$UPTIME_URL"
