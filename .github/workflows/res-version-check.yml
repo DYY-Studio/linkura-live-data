@@ -79,6 +79,11 @@ jobs:
     if: always()  # 无论是否有新版本都发送通知
     
     steps:
+    - name: Bypass Cloudflare for GitHub Action
+      uses: xiaotianxt/bypass-cloudflare-for-github-action@v1.1.1
+      with:
+        cf_zone_id: ${{ secrets.CF_ZONE_ID }}
+        cf_api_token: ${{ secrets.CF_API_TOKEN }}
     - name: Send Uptime notification
       run: |
         # 构建消息内容
@@ -99,13 +104,5 @@ jobs:
         echo "发送通知: $MSG"
         echo "编码后的消息: $ENCODED_MSG"
         
-        # 发送请求，添加User-Agent和其他headers来绕过Cloudflare
-        curl -L \
-          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" \
-          -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
-          -H "Accept-Language: en-US,en;q=0.5" \
-          -H "Accept-Encoding: gzip, deflate" \
-          -H "Connection: keep-alive" \
-          -H "Upgrade-Insecure-Requests: 1" \
-          --max-time 30 \
-          "$UPTIME_URL" || echo "Uptime通知发送失败"
+        # 发送请求
+        curl -f "$UPTIME_URL" || echo "Uptime通知发送失败"
