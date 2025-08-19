@@ -1,0 +1,62 @@
+name: Resource Version Check
+
+on:
+  schedule:
+    # 每30分钟运行一次
+    - cron: '*/30 * * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  check-res-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
+    
+    - name: Run resource version check
+      id: version-check
+      run: |
+        cd scripts
+        chmod +x handle_res_version.sh
+        if ./handle_res_version.sh; then
+          echo "new_version=true" >> $GITHUB_OUTPUT
+          # 获取新版本号用于commit信息
+          NEW_VERSION=$(head -n 1 ../data/res_version.txt)
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "检测到新的资源版本: $NEW_VERSION"
+        else
+          echo "new_version=false" >> $GITHUB_OUTPUT
+          echo "没有检测到新的资源版本"
+        fi
+    
+    - name: Configure Git
+      if: steps.version-check.outputs.new_version == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+    
+    - name: Commit and push changes
+      if: steps.version-check.outputs.new_version == 'true'
+      run: |
+        git add data/res_version.txt
+        git commit -m "res版本: ${{ steps.version-check.outputs.version }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create summary
+      run: |
+        if [ "${{ steps.version-check.outputs.new_version }}" == "true" ]; then
+          echo "✅ 检测到新的资源版本: ${{ steps.version-check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "📝 已提交更新到仓库" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "ℹ️ 没有检测到新的资源版本" >> $GITHUB_STEP_SUMMARY
+        fi
