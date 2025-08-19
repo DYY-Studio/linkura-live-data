@@ -1,5 +1,8 @@
 name: Resource Version Check
 
+permissions:
+  contents: write
+
 on:
   schedule:
     # 每30分钟运行一次
@@ -15,6 +18,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     
     - name: Set up environment
       run: |
@@ -43,14 +47,19 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
     
+    - name: Get the current date time
+      id: datetime
+      if: steps.version-check.outputs.new_version == 'true'
+      run: echo "time_now=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+    
     - name: Commit and push changes
       if: steps.version-check.outputs.new_version == 'true'
-      run: |
-        git add data/res_version.txt
-        git commit -m "res版本: ${{ steps.version-check.outputs.version }}"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: EndBug/add-and-commit@v9
+      with:
+        default_author: github_actions
+        message: 'res版本(${{ steps.datetime.outputs.time_now }}): ${{ steps.version-check.outputs.version }}'
+        add: |
+          - data/res_version.txt
     
     - name: Create summary
       run: |
