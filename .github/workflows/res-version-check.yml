@@ -99,5 +99,13 @@ jobs:
         echo "发送通知: $MSG"
         echo "编码后的消息: $ENCODED_MSG"
         
-        # 发送请求
-        curl "$UPTIME_URL"
+        # 发送请求，添加User-Agent和其他headers来绕过Cloudflare
+        curl -L \
+          -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" \
+          -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
+          -H "Accept-Language: en-US,en;q=0.5" \
+          -H "Accept-Encoding: gzip, deflate" \
+          -H "Connection: keep-alive" \
+          -H "Upgrade-Insecure-Requests: 1" \
+          --max-time 30 \
+          "$UPTIME_URL" || echo "Uptime通知发送失败"
