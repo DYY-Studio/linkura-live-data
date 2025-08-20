@@ -137,22 +137,40 @@ jobs:
     
     - name: Create summary
       run: |
+        # 获取当前版本信息
+        CURRENT_CLIENT_VER=""
+        CURRENT_RES_VER=""
+        if [ -f "others/linkura-googleplay-apk.csv" ]; then
+          CURRENT_CLIENT_VER=$(head -2 others/linkura-googleplay-apk.csv | tail -1 | cut -d',' -f2)
+        fi
+        if [ -f "data/res_version.txt" ]; then
+          CURRENT_RES_VER=$(head -n 1 data/res_version.txt | cut -d'@' -f1)
+        fi
+        
+        # 始终显示当前版本信息
+        echo "📊 **当前版本信息**" >> $GITHUB_STEP_SUMMARY
+        echo "🔄 客户端版本: ${CURRENT_CLIENT_VER:-未知}" >> $GITHUB_STEP_SUMMARY
+        echo "📦 资源版本: ${CURRENT_RES_VER:-未知}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
         if [ "${{ steps.version-check.outputs.new_version }}" == "true" ]; then
           UPDATE_TYPE="${{ steps.version-check.outputs.update_type }}"
           CLIENT_VER="${{ steps.version-check.outputs.client_version }}"
           RES_VER="${{ steps.version-check.outputs.res_version }}"
+          OLD_CLIENT_VER="${{ steps.version-check.outputs.old_client_version }}"
+          OLD_RES_VER="${{ steps.version-check.outputs.old_res_version }}"
           
+          echo "🎉 **检测到版本更新**" >> $GITHUB_STEP_SUMMARY
           case "$UPDATE_TYPE" in
             "client+res")
-              echo "✅ 检测到版本更新:" >> $GITHUB_STEP_SUMMARY
-              echo "🔄 客户端版本: ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY  
-              echo "📦 资源版本: ${RES_VER}" >> $GITHUB_STEP_SUMMARY
+              echo "🔄 客户端: ${OLD_CLIENT_VER} → ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY
+              echo "📦 资源: ${OLD_RES_VER} → ${RES_VER}" >> $GITHUB_STEP_SUMMARY
               ;;
             "client")
-              echo "✅ 检测到客户端版本更新: ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY
+              echo "🔄 客户端: ${OLD_CLIENT_VER} → ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY
               ;;
             "res")
-              echo "✅ 检测到资源版本更新: ${RES_VER}" >> $GITHUB_STEP_SUMMARY
+              echo "📦 资源: ${OLD_RES_VER} → ${RES_VER}" >> $GITHUB_STEP_SUMMARY
               ;;
             *)
               echo "✅ 检测到版本更新" >> $GITHUB_STEP_SUMMARY
@@ -160,7 +178,7 @@ jobs:
           esac
           echo "📝 已提交更新到仓库" >> $GITHUB_STEP_SUMMARY
         else
-          echo "ℹ️ 没有检测到版本更新" >> $GITHUB_STEP_SUMMARY
+          echo "ℹ️ **没有检测到版本更新**" >> $GITHUB_STEP_SUMMARY
         fi
 
   auto-upload:
