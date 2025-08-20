@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.version-check.outputs.new_version }}
-      version: ${{ steps.version-check.outputs.version }}
+      update_type: ${{ steps.version-check.outputs.update_type }}
+      client_version: ${{ steps.version-check.outputs.client_version }}
+      res_version: ${{ steps.version-check.outputs.res_version }}
     
     steps:
     - name: Checkout repository
@@ -19,7 +21,12 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-    
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
     - name: Set up environment
       run: |
         sudo apt-get update
@@ -30,15 +37,51 @@ jobs:
       run: |
         cd scripts
         chmod +x handle_res_version.sh
+        
+        # 获取更新前的状态
+        OLD_RES_VERSION=""
+        OLD_CLIENT_VERSION=""
+        if [ -f "../data/res_version.txt" ]; then
+          OLD_RES_VERSION=$(head -n 1 ../data/res_version.txt | cut -d'@' -f1)
+        fi
+        if [ -f "../others/linkura-googleplay-apk.csv" ]; then
+          OLD_CLIENT_VERSION=$(head -2 ../others/linkura-googleplay-apk.csv | tail -1 | cut -d',' -f2)
+        fi
+        
+        # 运行版本检查脚本
         if ./handle_res_version.sh; then
           echo "new_version=true" >> $GITHUB_OUTPUT
-          # 获取新版本号用于commit信息
-          NEW_VERSION=$(head -n 1 ../data/res_version.txt)
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "检测到新的资源版本: $NEW_VERSION"
+          
+          # 获取更新后的版本信息
+          NEW_RES_VERSION=$(head -n 1 ../data/res_version.txt | cut -d'@' -f1)
+          NEW_CLIENT_VERSION=$(head -2 ../others/linkura-googleplay-apk.csv | tail -1 | cut -d',' -f2)
+          
+          # 确定更新类型
+          UPDATE_TYPE=""
+          if [ "$OLD_CLIENT_VERSION" != "$NEW_CLIENT_VERSION" ] && [ "$OLD_RES_VERSION" != "$NEW_RES_VERSION" ]; then
+            UPDATE_TYPE="client+res"
+            echo "检测到客户端版本更新: $OLD_CLIENT_VERSION -> $NEW_CLIENT_VERSION"
+            echo "检测到资源版本更新: $OLD_RES_VERSION -> $NEW_RES_VERSION"
+          elif [ "$OLD_CLIENT_VERSION" != "$NEW_CLIENT_VERSION" ]; then
+            UPDATE_TYPE="client"
+            echo "检测到客户端版本更新: $OLD_CLIENT_VERSION -> $NEW_CLIENT_VERSION"
+          elif [ "$OLD_RES_VERSION" != "$NEW_RES_VERSION" ]; then
+            UPDATE_TYPE="res"
+            echo "检测到资源版本更新: $OLD_RES_VERSION -> $NEW_RES_VERSION"
+          else
+            UPDATE_TYPE="unknown"
+          fi
+          
+          # 输出变量
+          echo "update_type=$UPDATE_TYPE" >> $GITHUB_OUTPUT
+          echo "client_version=$NEW_CLIENT_VERSION" >> $GITHUB_OUTPUT
+          echo "res_version=$NEW_RES_VERSION" >> $GITHUB_OUTPUT
+          echo "old_client_version=$OLD_CLIENT_VERSION" >> $GITHUB_OUTPUT
+          echo "old_res_version=$OLD_RES_VERSION" >> $GITHUB_OUTPUT
+          
         else
           echo "new_version=false" >> $GITHUB_OUTPUT
-          echo "没有检测到新的资源版本"
+          echo "没有检测到版本更新"
         fi
     
     - name: Configure Git
@@ -52,22 +95,72 @@ jobs:
       if: steps.version-check.outputs.new_version == 'true'
       run: echo "time_now=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
     
+    - name: Generate commit message
+      if: steps.version-check.outputs.new_version == 'true'
+      id: commit-msg
+      run: |
+        UPDATE_TYPE="${{ steps.version-check.outputs.update_type }}"
+        CLIENT_VER="${{ steps.version-check.outputs.client_version }}"
+        RES_VER="${{ steps.version-check.outputs.res_version }}"
+        OLD_CLIENT_VER="${{ steps.version-check.outputs.old_client_version }}"
+        OLD_RES_VER="${{ steps.version-check.outputs.old_res_version }}"
+        DATETIME="${{ steps.datetime.outputs.time_now }}"
+        
+        case "$UPDATE_TYPE" in
+          "client+res")
+            MSG="feat: update client v${CLIENT_VER} + resource ${RES_VER} (${DATETIME})"
+            ;;
+          "client")
+            MSG="feat: update client version ${OLD_CLIENT_VER} -> ${CLIENT_VER} (${DATETIME})"
+            ;;
+          "res")
+            MSG="feat: update resource version ${OLD_RES_VER} -> ${RES_VER} (${DATETIME})"
+            ;;
+          *)
+            MSG="feat: version update (${DATETIME})"
+            ;;
+        esac
+        
+        echo "commit_message=${MSG}" >> $GITHUB_OUTPUT
+        echo "生成的提交信息: ${MSG}"
+
     - name: Commit and push changes
       if: steps.version-check.outputs.new_version == 'true'
       uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
-        message: 'res version(${{ steps.datetime.outputs.time_now }}): ${{ steps.version-check.outputs.version }}'
+        message: '${{ steps.commit-msg.outputs.commit_message }}'
         add: |
           - data/res_version.txt
+          - others/linkura-googleplay-apk.csv
+          - data/client-res.json
     
     - name: Create summary
       run: |
         if [ "${{ steps.version-check.outputs.new_version }}" == "true" ]; then
-          echo "✅ 检测到新的资源版本: ${{ steps.version-check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          UPDATE_TYPE="${{ steps.version-check.outputs.update_type }}"
+          CLIENT_VER="${{ steps.version-check.outputs.client_version }}"
+          RES_VER="${{ steps.version-check.outputs.res_version }}"
+          
+          case "$UPDATE_TYPE" in
+            "client+res")
+              echo "✅ 检测到版本更新:" >> $GITHUB_STEP_SUMMARY
+              echo "🔄 客户端版本: ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY  
+              echo "📦 资源版本: ${RES_VER}" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "client")
+              echo "✅ 检测到客户端版本更新: ${CLIENT_VER}" >> $GITHUB_STEP_SUMMARY
+              ;;
+            "res")
+              echo "✅ 检测到资源版本更新: ${RES_VER}" >> $GITHUB_STEP_SUMMARY
+              ;;
+            *)
+              echo "✅ 检测到版本更新" >> $GITHUB_STEP_SUMMARY
+              ;;
+          esac
           echo "📝 已提交更新到仓库" >> $GITHUB_STEP_SUMMARY
         else
-          echo "ℹ️ 没有检测到新的资源版本" >> $GITHUB_STEP_SUMMARY
+          echo "ℹ️ 没有检测到版本更新" >> $GITHUB_STEP_SUMMARY
         fi
 
   notification:
@@ -86,10 +179,27 @@ jobs:
       run: |
         # 构建消息内容
         if [ "${{ needs.check-res-version.outputs.new_version }}" == "true" ]; then
-          MSG="检测到新的资源版本: ${{ needs.check-res-version.outputs.version }}"
+          UPDATE_TYPE="${{ needs.check-res-version.outputs.update_type }}"
+          CLIENT_VER="${{ needs.check-res-version.outputs.client_version }}"
+          RES_VER="${{ needs.check-res-version.outputs.res_version }}"
+          
+          case "$UPDATE_TYPE" in
+            "client+res")
+              MSG="检测到版本更新: 客户端v${CLIENT_VER} + 资源${RES_VER}"
+              ;;
+            "client")
+              MSG="检测到客户端版本更新: ${CLIENT_VER}"
+              ;;
+            "res")
+              MSG="检测到资源版本更新: ${RES_VER}"
+              ;;
+            *)
+              MSG="检测到版本更新"
+              ;;
+          esac
           STATUS="up"
         else
-          MSG="资源版本检查完成，无新版本"
+          MSG="版本检查完成，无新版本"
           STATUS="up"
         fi
         
