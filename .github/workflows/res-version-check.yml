@@ -144,7 +144,7 @@ jobs:
           CURRENT_CLIENT_VER=$(head -2 others/linkura-googleplay-apk.csv | tail -1 | cut -d',' -f2)
         fi
         if [ -f "data/res_version.txt" ]; then
-          CURRENT_RES_VER=$(head -n 1 data/res_version.txt | cut -d'@' -f1)
+          CURRENT_RES_VER=$(head -n 1 data/res_version.txt)
         fi
         
         # 始终显示当前版本信息
