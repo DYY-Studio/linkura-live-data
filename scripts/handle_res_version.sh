@@ -111,8 +111,8 @@ if res_updated and res_version:
     
     # 检查资源版本是否已存在
     if res_version not in data[client_version]:
-        # 将新的资源版本添加到列表开头（最新的在前）
-        data[client_version].insert(0, res_version)
+        # 将新的资源版本添加到列表末尾
+        data[client_version].append(res_version)
         print(f'资源版本 {res_version} 已添加到 {client_version}')
     else:
         print(f'资源版本 {res_version} 已存在于 {client_version}')
