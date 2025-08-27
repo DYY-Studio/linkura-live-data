@@ -59,9 +59,10 @@ jobs:
       uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
-        message: 'auto(${{ steps.datetime.outputs.time_now }}): Update archive.json'
+        message: 'auto(${{ steps.datetime.outputs.time_now }}): Update archive info'
         add: |
           - data/archive.json
+          - data/archive-details.json
 
     - name: Get commit timestamp for follow-up jobs
       id: commit_info

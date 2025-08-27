@@ -97,7 +97,8 @@ def find_new_data(temp_data, existing_data):
             continue
             
         archives_id = temp_entry['archives_id']
-        normalized_temp = normalize_archive_entry(temp_entry)
+        # normalized_temp = normalize_archive_entry(temp_entry)
+        normalized_temp = temp_entry
         
         if archives_id in existing_dict:
             existing_entry = existing_dict[archives_id]
@@ -152,7 +153,6 @@ def process_archive_details(detail_data):
     if detail_data:
         detail_data['gift_pt_rankings'] = []
         detail_data['timelines'] = []
-        detail_data['timeline_ids'] = []
         prefix_to_remove = 'https://assets.link-like-lovelive.app'
         if 'video_url' in detail_data and detail_data['video_url']:
             if detail_data['video_url'].startswith(prefix_to_remove):
