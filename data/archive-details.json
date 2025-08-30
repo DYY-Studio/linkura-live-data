@@ -1,4 +1,150 @@
 {
+  "2fd5361e-75a5-4442-a006-3cd83f6e20cf": {
+    "archive_url": "/archive/alst/20250829195100-80511478-c4e8-4e1f-b2eb-b5e95e85d1e9/811c9dc5c44e9.md",
+    "chapters": [
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "本編開始\t",
+        "play_time_second": 529
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "Overture\t",
+        "play_time_second": 599
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "ブルウモーメント",
+        "play_time_second": 703
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "Very! Very! COCO夏っ",
+        "play_time_second": 977
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "フュージョンクラスト",
+        "play_time_second": 1218
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "可惜夜花火",
+        "play_time_second": 1525
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "MC1",
+        "play_time_second": 1774
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "夏めきペイン（105期Ver.）",
+        "play_time_second": 2562
+      },
+      {
+        "is_available": true,
+        "is_extra": false,
+        "name": "MC2",
+        "play_time_second": 2788
+      },
+      {
+        "is_available": false,
+        "is_extra": true,
+        "name": "Fes×LIVE AFTER 開場",
+        "play_time_second": 3300
+      },
+      {
+        "is_available": false,
+        "is_extra": true,
+        "name": "Fes×LIVE AFTER 開演",
+        "play_time_second": 3350
+      }
+    ],
+    "characters": [
+      {
+        "character_id": 1052,
+        "is_guest": false
+      },
+      {
+        "character_id": 1051,
+        "is_guest": false
+      },
+      {
+        "character_id": 1041,
+        "is_guest": false
+      },
+      {
+        "character_id": 1042,
+        "is_guest": false
+      },
+      {
+        "character_id": 1043,
+        "is_guest": false
+      },
+      {
+        "character_id": 1031,
+        "is_guest": false
+      },
+      {
+        "character_id": 1032,
+        "is_guest": false
+      },
+      {
+        "character_id": 1033,
+        "is_guest": false
+      }
+    ],
+    "content_code": 999,
+    "costume_ids": [
+      3028
+    ],
+    "current_camera_type": 1,
+    "current_play_time_second": 0,
+    "description": "出演者：\n■スリーズブーケ\n日野下 花帆（蓮ノ空女学院 3年）\n百生 吟子（蓮ノ空女学院 2年）\n\n■DOLLCHESTRA\n村野 さやか（蓮ノ空女学院 3年）\n徒町 小鈴（蓮ノ空女学院 2年）\n\n■みらくらぱーく！\n大沢 瑠璃乃（蓮ノ空女学院 3年）\n安養寺 姫芽（蓮ノ空女学院 2年）\n\n■Edel Note\n桂城 泉（蓮ノ空女学院 2年）\nセラス 柳田 リリエンフェルト（蓮ノ空女学院 1年）\n\nライブプロデュース：\n蓮ノ空女学院 スクールアイドルクラブ\n\nwith you…",
+    "gift_pt_rankings": [],
+    "has_extra_admission": false,
+    "live_location_id": 36,
+    "live_start_time": "2025-08-29T11:00:00Z",
+    "selectable_camera_types": [
+      1
+    ],
+    "ticket_rank": 1,
+    "timeline_ids": [
+      31098361,
+      50122361,
+      50132361,
+      50142361,
+      50112361,
+      2031058361,
+      31036361,
+      31036362,
+      31036353,
+      31036354,
+      31036363,
+      31049361,
+      31049362,
+      31016361
+    ],
+    "timelines": [],
+    "title": "105期 Fes×LIVE 〜A Day in Summer Light〜",
+    "total_gift_pt": "250,192,860",
+    "total_play_time_second": 3300,
+    "unixtime_live_rec_started": 1756464660,
+    "user_gift_pt": 0,
+    "user_gift_pt_ranking": 0,
+    "user_icon_parts_info": "",
+    "video_url": "/archive/hls/20250829/index.m3u8",
+    "viewer_count": 0
+  },
   "923a7063-ee6b-4447-95ad-39619efd0a44": {
     "archive_url": "/archive/alst/20250828202000-cd62a83b-d9af-411b-a6ba-c15c473526de/811c9dc577484.md",
     "chapters": [
