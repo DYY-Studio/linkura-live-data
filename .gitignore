@@ -103,3 +103,5 @@ logs
 .bak
 
 tmp
+
+local_scripts
